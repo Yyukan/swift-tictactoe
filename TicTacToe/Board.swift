@@ -36,9 +36,25 @@ class Board : Printable {
     func get(row: Int, column: Int) -> Figure {
         return board[row * Boards.width + column]
     }
-    
-    // TODO:yukan optimize
+
+    /**
+     * Defines winner by checking rows, columns and diagonals for the same type of the figure (CROSS or ZERO)
+     */
     func winner() -> Figure? {
+        
+        func isSame(array:Array<Figure>) -> Figure? {
+            let figures = array.filter{$0 != Figure.EMPTY}
+            if (figures.count > 0) {
+                if (figures.filter{$0 == Figure.CROSS}.count == array.count) {
+                    return Figure.CROSS
+                }
+                if (figures.filter{$0 == Figure.ZERO}.count == array.count) {
+                    return Figure.ZERO
+                }
+            }
+        
+            return nil
+        }
         
         // check rows
         for row in 0..<Boards.height {
@@ -46,14 +62,9 @@ class Board : Printable {
             for column in 0..<Boards.width {
                 array.append(get(row, column: column))
             }
-            let figures = array.filter{$0 != Figure.EMPTY}
-            if (figures.count > 0) {
-                if (figures.filter{$0 == Figure.CROSS}.count == Boards.width) {
-                    return Figure.CROSS
-                }
-                if (figures.filter{$0 == Figure.ZERO}.count == Boards.width) {
-                    return Figure.ZERO
-                }
+
+            if let figure = isSame(array) {
+                return figure
             }
             
             array.removeAll(keepCapacity: true)
@@ -66,50 +77,35 @@ class Board : Printable {
             for row in 0..<Boards.width {
                 array.append(get(row, column: column))
             }
-            let figures = array.filter{$0 != Figure.EMPTY}
-            if (figures.count > 0) {
-                if (figures.filter{$0 == Figure.CROSS}.count == Boards.height) {
-                    return Figure.CROSS
-                }
-                if (figures.filter{$0 == Figure.ZERO}.count == Boards.height) {
-                    return Figure.ZERO
-                }
+            
+            if let figure = isSame(array) {
+                return figure
             }
+            
             array.removeAll(keepCapacity: true)
         }
         
         
-        // check diagonals
+        // check forward diagonal
         var array : Array<Figure> = []
 
         for index in 0..<Boards.width {
             array.append(get(index, column: index))
         }
         
-        var figures = array.filter{$0 != Figure.EMPTY}
-        if (figures.count > 0) {
-            if (figures.filter{$0 == Figure.CROSS}.count == Boards.width) {
-                return Figure.CROSS
-            }
-            if (figures.filter{$0 == Figure.ZERO}.count == Boards.width) {
-                return Figure.ZERO
-            }
+        if let figure = isSame(array) {
+            return figure
         }
 
         array.removeAll(keepCapacity: true)
 
+        // check backward diagonal
         for index in 0..<Boards.width {
             array.append(get(index, column: Boards.width - index - 1))
         }
         
-        figures = array.filter{$0 != Figure.EMPTY}
-        if (figures.count > 0) {
-            if (figures.filter{$0 == Figure.CROSS}.count == Boards.width) {
-                return Figure.CROSS
-            }
-            if (figures.filter{$0 == Figure.ZERO}.count == Boards.width) {
-                return Figure.ZERO
-            }
+        if let figure = isSame(array) {
+            return figure
         }
         
         return nil
