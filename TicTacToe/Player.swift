@@ -44,7 +44,13 @@ class Ai : AbstractPlayer {
     
     var choice : Int = -1
     
+    var minimaxCall : Int = 0
+    var scoreCall : Int = 0
+    
     func score(board: Board) -> Int {
+        
+        scoreCall++
+        
         let winner = board.winner()
         if winner == nil {
             return 0
@@ -56,6 +62,8 @@ class Ai : AbstractPlayer {
     }
     
     func minimax(board: Board, player: Figure) -> Int {
+        minimaxCall++
+        
         // no more movements - terminal state
         if !board.isMovePossible() {
             return score(board)
@@ -70,8 +78,8 @@ class Ai : AbstractPlayer {
             var next = board.copy()
             next.set(move, figure: player)
 
-            println(a)
-            println(next.description)
+            //println(a)
+            //println(next.description)
             
             scores.append(minimax(next, player : (player == Figure.ZERO ? Figure.CROSS : Figure.ZERO)))
             moves.append(move)
@@ -116,6 +124,8 @@ class Ai : AbstractPlayer {
     
     override func move() {
         minimax(board, player: self.figure)
+        println("Stat minimax \(minimaxCall) score \(scoreCall)")
+        
         board.set(choice, figure: figure)
     }
 }
