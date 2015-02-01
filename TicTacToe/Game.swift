@@ -12,10 +12,6 @@ class Game {
     
     var board = Board()
     
-    init () {
-        
-    }
-    
     func run() {
         
         let player1 = Human(figure : Figure.CROSS, board:board)
