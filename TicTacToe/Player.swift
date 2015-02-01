@@ -43,5 +43,7 @@ class Human : AbstractPlayer {
 class Ai : AbstractPlayer {
     override func move() {
         super.move()
+        // here must be minimax
+        
     }
 }
