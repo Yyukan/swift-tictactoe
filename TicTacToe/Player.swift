@@ -61,11 +61,18 @@ class Ai : AbstractPlayer {
         }
     }
     
+    ///
+    /// Minimax implementation for position specified by board
+    /// and player X or 0 specified by player
+    ///
+    /// :returns: score(estimation) for this position
+    ///
     func minimax(board: Board, player: Figure) -> Int {
         minimaxCall++
         
         // no more movements - terminal state
         if !board.isMovePossible() {
+            // returns score for terminal position
             return score(board)
         }
     
@@ -78,23 +85,26 @@ class Ai : AbstractPlayer {
             var next = board.copy()
             next.set(move, figure: player)
 
-            //println(a)
-            //println(next.description)
+            println(a)
+            println(next.description)
             
+            // save score for next move
             scores.append(minimax(next, player : (player == Figure.ZERO ? Figure.CROSS : Figure.ZERO)))
+            // save index of the next move
             moves.append(move)
         }
         
+        // for player choose maximum from moves
         if self.figure == player {
-            let max_score_index = max(scores)
-            choice = moves[max_score_index]
-            return scores[max_score_index]
+            let index = max(scores)
+            choice = moves[index]
+            return scores[index]
         }
-        else
+        else // for opposite side calculate minimum
         {
-            let min_score_index = min(scores)
-            choice = moves[min_score_index]
-            return scores[min_score_index]
+            let index = min(scores)
+            choice = moves[index]
+            return scores[index]
         }
     }
     
@@ -123,6 +133,9 @@ class Ai : AbstractPlayer {
     }
     
     override func move() {
+        self.minimaxCall = 0
+        self.scoreCall = 0
+        
         minimax(board, player: self.figure)
         println("Stat minimax \(minimaxCall) score \(scoreCall)")
         
