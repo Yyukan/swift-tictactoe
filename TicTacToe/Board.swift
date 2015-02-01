@@ -9,34 +9,45 @@
 import Foundation
 
 struct Boards {
-    static let width : Int = 3
-    static let height : Int = 3
+    static let size : Int = 3
+    static let width : Int = size
+    static let height : Int = size
 }
 
 class Board : Printable {
     
-    var board = [Figure](count: Boards.width * Boards.height, repeatedValue: Figure.EMPTY)
+    var board : Array<Figure> = [Figure](count: Boards.width * Boards.height, repeatedValue: Figure.EMPTY)
     
     func set(index: Int, figure: Figure) {
         board[index] = figure
-    }
-    
-    func isMovePossible() -> Bool {
-        return (board.filter{ $0 == Figure.EMPTY}.count > 0 && winner() == nil)
-    }
-    
-    func row(row: Int) -> String {
-        
-        let start = row * Boards.width
-        let end = row * Boards.width + Boards.width - 1
-        
-        return "|".join(board[start...end].map { $0.description })
     }
     
     func get(row: Int, column: Int) -> Figure {
         return board[row * Boards.width + column]
     }
 
+    func copy() -> Board {
+        let result = Board()
+        result.board = self.board
+        return result
+    }
+    
+    func isMovePossible() -> Bool {
+        return (board.filter{ $0 == Figure.EMPTY}.count > 0 && winner() == nil)
+    }
+
+    func availableMoves() -> Array<Int> {
+    
+        var result:Array<Int> = []
+        for (i, value) in enumerate(board) {
+            if value == Figure.EMPTY {
+                result.append(i)
+            }
+        }
+
+        return result;
+    }
+    
     /**
      * Defines winner by checking rows, columns and diagonals for the same type of the figure (CROSS or ZERO)
      */
@@ -115,7 +126,10 @@ class Board : Printable {
         var result = ""
 
         for index in 0...Boards.height - 1 {
-            result += row(index) + "\n"
+            let start = index * Boards.width
+            let end = index * Boards.width + Boards.width - 1
+            
+            result += "|".join(board[start...end].map { $0.description }) + "\n"
         }
         
         return result

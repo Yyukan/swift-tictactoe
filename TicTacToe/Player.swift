@@ -41,9 +41,81 @@ class Human : AbstractPlayer {
 
 
 class Ai : AbstractPlayer {
-    override func move() {
-        super.move()
-        // here must be minimax
+    
+    var choice : Int = -1
+    
+    func score(board: Board) -> Int {
+        let winner = board.winner()
+        if winner == nil {
+            return 0
+        } else if winner == figure {
+            return 10
+        } else {
+            return -10
+        }
+    }
+    
+    func minimax(board: Board, player: Figure) -> Int {
+        // no more movements - terminal state
+        if !board.isMovePossible() {
+            return score(board)
+        }
+    
+        var scores : Array<Int> = []
+        var moves : Array<Int> = []
+
+        var a = board.availableMoves()
+        for move in a
+        {
+            var next = board.copy()
+            next.set(move, figure: player)
+
+            println(a)
+            println(next.description)
+            
+            scores.append(minimax(next, player : (player == Figure.ZERO ? Figure.CROSS : Figure.ZERO)))
+            moves.append(move)
+        }
         
+        if self.figure == player {
+            let max_score_index = max(scores)
+            choice = moves[max_score_index]
+            return scores[max_score_index]
+        }
+        else
+        {
+            let min_score_index = min(scores)
+            choice = moves[min_score_index]
+            return scores[min_score_index]
+        }
+    }
+    
+    func min(array: Array<Int>) -> Int {
+        var min = array[0]
+        var result = 0
+        for index in 1..<array.count {
+            if (array[index] < min) {
+                result = index;
+                min = array[index]
+            }
+        }
+        return result;
+    }
+    
+    func max(array: Array<Int>) -> Int {
+        var max = array[0]
+        var result = 0
+        for index in 1..<array.count {
+            if (array[index] > max) {
+                result = index;
+                max = array[index]
+            }
+        }
+        return result;
+    }
+    
+    override func move() {
+        minimax(board, player: self.figure)
+        board.set(choice, figure: figure)
     }
 }
