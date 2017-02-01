@@ -17,18 +17,18 @@ class Game {
         let player1 = Human(figure : Figure.CROSS, board:board)
         let player2 = Ai(figure : Figure.ZERO, board:board)
         
-        println(board.description)
-        do {
+        print(board.description)
+        repeat {
             if board.isMovePossible() {
                 player1.move()
-                println(board.description)
+                print(board.description)
             } else {
                 break
             }
             
             if board.isMovePossible() {
                 player2.move()
-                println(board.description)
+                print(board.description)
             } else {
                 break
             }
@@ -37,11 +37,11 @@ class Game {
         let winner = board.winner()
         
         if (player1.figure == winner) {
-            println("Player 1 won")
+            print("Player 1 won")
         } else if (player2.figure == winner) {
-            println("Player 2 won")
+            print("Player 2 won")
         } else {
-            println("No winner")
+            print("No winner")
         }
         
     }

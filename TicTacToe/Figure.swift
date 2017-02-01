@@ -8,7 +8,7 @@
 
 import Foundation
 
-enum Figure : String, Printable {
+enum Figure : String, CustomStringConvertible {
     case ZERO = "0"
     case CROSS = "X"
     case EMPTY = " "
