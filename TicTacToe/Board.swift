@@ -16,7 +16,7 @@ struct Boards {
 
 class Board : CustomStringConvertible {
     
-    var board : Array<Figure> = [Figure](repeating: Figure.EMPTY, count: Boards.width * Boards.height)
+    var board : Array<Figure> = [Figure](repeating: Figure.empty, count: Boards.width * Boards.height)
     
     func set(_ index: Int, figure: Figure) {
         board[index] = figure
@@ -33,14 +33,14 @@ class Board : CustomStringConvertible {
     }
     
     func isMovePossible() -> Bool {
-        return (board.filter{ $0 == Figure.EMPTY}.count > 0 && winner() == nil)
+        return (board.filter{ $0 == Figure.empty}.count > 0 && winner() == nil)
     }
     
     func availableMoves() -> Array<Int> {
         
         var result:Array<Int> = []
         for (i, value) in board.enumerated() {
-            if value == Figure.EMPTY {
+            if value == Figure.empty {
                 result.append(i)
             }
         }
@@ -54,13 +54,13 @@ class Board : CustomStringConvertible {
     func winner() -> Figure? {
         
         func isSame(_ array:Array<Figure>) -> Figure? {
-            let figures = array.filter{$0 != Figure.EMPTY}
+            let figures = array.filter{$0 != Figure.empty}
             if (figures.count > 0) {
-                if (figures.filter{$0 == Figure.CROSS}.count == array.count) {
-                    return Figure.CROSS
+                if (figures.filter{$0 == Figure.cross}.count == array.count) {
+                    return Figure.cross
                 }
-                if (figures.filter{$0 == Figure.ZERO}.count == array.count) {
-                    return Figure.ZERO
+                if (figures.filter{$0 == Figure.zero}.count == array.count) {
+                    return Figure.zero
                 }
             }
             

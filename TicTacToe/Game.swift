@@ -14,8 +14,8 @@ class Game {
     
     func run() {
         
-        let player1 = Human(figure : Figure.CROSS, board:board)
-        let player2 = Ai(figure : Figure.ZERO, board:board)
+        let player1 = Human(figure : Figure.cross, board:board)
+        let player2 = Ai(figure : Figure.zero, board:board)
         
         print(board.description)
         repeat {

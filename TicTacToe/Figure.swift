@@ -9,9 +9,9 @@
 import Foundation
 
 enum Figure : String, CustomStringConvertible {
-    case ZERO = "0"
-    case CROSS = "X"
-    case EMPTY = " "
+    case zero = "0"
+    case cross = "X"
+    case empty = " "
     
     var description : String {
         get {

@@ -91,7 +91,7 @@ class Ai : AbstractPlayer {
             print(next.description)
             
             // save score for next move
-            scores.append(minimax(next, player : (player == Figure.ZERO ? Figure.CROSS : Figure.ZERO)))
+            scores.append(minimax(next, player : (player == Figure.zero ? Figure.cross : Figure.zero)))
             // save index of the next move
             moves.append(move)
         }
