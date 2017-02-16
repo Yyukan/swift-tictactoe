@@ -14,18 +14,18 @@ struct Boards {
     static let height : Int = size
 }
 
-class Board : Printable {
+class Board : CustomStringConvertible {
     
-    var board : Array<Figure> = [Figure](count: Boards.width * Boards.height, repeatedValue: Figure.EMPTY)
+    var board : Array<Figure> = [Figure](repeating: Figure.empty, count: Boards.width * Boards.height)
     
-    func set(index: Int, figure: Figure) {
+    func set(_ index: Int, figure: Figure) {
         board[index] = figure
     }
     
-    func get(row: Int, column: Int) -> Figure {
+    func get(_ row: Int, column: Int) -> Figure {
         return board[row * Boards.width + column]
     }
-
+    
     func copy() -> Board {
         let result = Board()
         result.board = self.board
@@ -33,18 +33,18 @@ class Board : Printable {
     }
     
     func isMovePossible() -> Bool {
-        return (board.filter{ $0 == Figure.EMPTY}.count > 0 && winner() == nil)
+        return (board.filter{ $0 == Figure.empty}.count > 0 && winner() == nil)
     }
-
-    func availableMoves() -> Array<Int> {
     
+    func availableMoves() -> Array<Int> {
+        
         var result:Array<Int> = []
-        for (i, value) in enumerate(board) {
-            if value == Figure.EMPTY {
+        for (i, value) in board.enumerated() {
+            if value == Figure.empty {
                 result.append(i)
             }
         }
-
+        
         return result;
     }
     
@@ -53,17 +53,17 @@ class Board : Printable {
      */
     func winner() -> Figure? {
         
-        func isSame(array:Array<Figure>) -> Figure? {
-            let figures = array.filter{$0 != Figure.EMPTY}
+        func isSame(_ array:Array<Figure>) -> Figure? {
+            let figures = array.filter{$0 != Figure.empty}
             if (figures.count > 0) {
-                if (figures.filter{$0 == Figure.CROSS}.count == array.count) {
-                    return Figure.CROSS
+                if (figures.filter{$0 == Figure.cross}.count == array.count) {
+                    return Figure.cross
                 }
-                if (figures.filter{$0 == Figure.ZERO}.count == array.count) {
-                    return Figure.ZERO
+                if (figures.filter{$0 == Figure.zero}.count == array.count) {
+                    return Figure.zero
                 }
             }
-        
+            
             return nil
         }
         
@@ -73,12 +73,12 @@ class Board : Printable {
             for column in 0..<Boards.width {
                 array.append(get(row, column: column))
             }
-
+            
             if let figure = isSame(array) {
                 return figure
             }
             
-            array.removeAll(keepCapacity: true)
+            array.removeAll(keepingCapacity: true)
         }
         
         
@@ -93,13 +93,13 @@ class Board : Printable {
                 return figure
             }
             
-            array.removeAll(keepCapacity: true)
+            array.removeAll(keepingCapacity: true)
         }
         
         
         // check forward diagonal
         var array : Array<Figure> = []
-
+        
         for index in 0..<Boards.width {
             array.append(get(index, column: index))
         }
@@ -107,9 +107,9 @@ class Board : Printable {
         if let figure = isSame(array) {
             return figure
         }
-
-        array.removeAll(keepCapacity: true)
-
+        
+        array.removeAll(keepingCapacity: true)
+        
         // check backward diagonal
         for index in 0..<Boards.width {
             array.append(get(index, column: Boards.width - index - 1))
@@ -124,12 +124,12 @@ class Board : Printable {
     
     var description : String {
         var result = ""
-
+        
         for index in 0...Boards.height - 1 {
             let start = index * Boards.width
             let end = index * Boards.width + Boards.width - 1
             
-            result += "|".join(board[start...end].map { $0.description }) + "\n"
+            result += Array<String>(board[start...end].map { $0.description }).joined(separator: "|") + "\n"
         }
         
         return result

@@ -8,6 +8,6 @@
 
 import Foundation
 
-println("Tic Tac Toe")
+print("Tic Tac Toe")
 
 Game().run()

@@ -8,10 +8,10 @@
 
 import Foundation
 
-enum Figure : String, Printable {
-    case ZERO = "0"
-    case CROSS = "X"
-    case EMPTY = " "
+enum Figure : String, CustomStringConvertible {
+    case zero = "0"
+    case cross = "X"
+    case empty = " "
     
     var description : String {
         get {

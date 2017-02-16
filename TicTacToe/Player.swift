@@ -23,13 +23,15 @@ class AbstractPlayer : Player {
     }
     
     func move() {
-        func input() -> NSString? {
-            println("Input index of figure \(self.figure.description):")
-            return NSString(data:NSFileHandle.fileHandleWithStandardInput().availableData, encoding:NSUTF8StringEncoding)
+        func input() -> String? {
+            print("Input index of figure \(self.figure.description):")
+            return readLine(strippingNewline: true)
         }
-
-        var index : String = input()!
-        board.set(dropLast(index).toInt()!, figure: self.figure)
+        
+        if let index = input() {
+            board.set(Int(index)!, figure: self.figure)
+        }
+        
     }
 }
 
@@ -47,9 +49,9 @@ class Ai : AbstractPlayer {
     var minimaxCall : Int = 0
     var scoreCall : Int = 0
     
-    func score(board: Board) -> Int {
+    func score(_ board: Board) -> Int {
         
-        scoreCall++
+        scoreCall += 1
         
         let winner = board.winner()
         if winner == nil {
@@ -67,29 +69,29 @@ class Ai : AbstractPlayer {
     ///
     /// :returns: score(estimation) for this position
     ///
-    func minimax(board: Board, player: Figure) -> Int {
-        minimaxCall++
+    func minimax(_ board: Board, player: Figure) -> Int {
+        minimaxCall += 1
         
         // no more movements - terminal state
         if !board.isMovePossible() {
             // returns score for terminal position
             return score(board)
         }
-    
+        
         var scores : Array<Int> = []
         var moves : Array<Int> = []
-
-        var a = board.availableMoves()
+        
+        let a = board.availableMoves()
         for move in a
         {
-            var next = board.copy()
+            let next = board.copy()
             next.set(move, figure: player)
-
-            println(a)
-            println(next.description)
+            
+            print(a)
+            print(next.description)
             
             // save score for next move
-            scores.append(minimax(next, player : (player == Figure.ZERO ? Figure.CROSS : Figure.ZERO)))
+            scores.append(minimax(next, player : (player == Figure.zero ? Figure.cross : Figure.zero)))
             // save index of the next move
             moves.append(move)
         }
@@ -108,7 +110,7 @@ class Ai : AbstractPlayer {
         }
     }
     
-    func min(array: Array<Int>) -> Int {
+    func min(_ array: Array<Int>) -> Int {
         var min = array[0]
         var result = 0
         for index in 1..<array.count {
@@ -120,7 +122,7 @@ class Ai : AbstractPlayer {
         return result;
     }
     
-    func max(array: Array<Int>) -> Int {
+    func max(_ array: Array<Int>) -> Int {
         var max = array[0]
         var result = 0
         for index in 1..<array.count {
@@ -136,8 +138,8 @@ class Ai : AbstractPlayer {
         self.minimaxCall = 0
         self.scoreCall = 0
         
-        minimax(board, player: self.figure)
-        println("Stat minimax \(minimaxCall) score \(scoreCall)")
+        _ = minimax(board, player: self.figure)
+        print("Stat minimax \(minimaxCall) score \(scoreCall)")
         
         board.set(choice, figure: figure)
     }
